@@ -1,0 +1,34 @@
+#daemonize
+show-failed-attempts
+clock
+color=00000000
+indicator
+indicator-radius=100
+indicator-thickness=10
+line-color=111111
+ring-color=111111
+inside-color=111111
+key-hl-color=a09ab0
+separator-color=00000000
+text-color=a09ab0
+text-caps-lock-color=""
+line-ver-color=111111
+ring-ver-color=111111
+inside-ver-color=111111
+text-ver-color=a09ab0
+ring-wrong-color=111111
+text-wrong-color=a09ab0
+inside-wrong-color=111111
+inside-clear-color=111111
+text-clear-color=a09ab0
+ring-clear-color=111111
+line-clear-color=111111
+line-wrong-color=111111
+bs-hl-color=a09ab0
+grace=2
+grace-no-mouse
+grace-no-touch
+datestr=%a, %B %e
+timestr=%I:%M %p
+fade-in=0.2
+ignore-empty-password
