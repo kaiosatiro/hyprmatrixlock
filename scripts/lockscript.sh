@@ -9,7 +9,7 @@ checkpid=$(pgrep swaylock)
 if ! [ -z $checkpid ]; then
 	#swayidle &
 	screens=$(hyprctl -j monitors | jq length)
-	for (( i = 0; i < $screens; i++ ))
+	for (( i = -1; i < $screens; i++ ))
 	do
 		sleep 0.3
 		hyprctl dispatch focusmonitor $i 
