@@ -86,27 +86,28 @@ def matrix_script_gen(pkg:str):
         
     print("""
 Matrix COLOR?
-    (1) Green   (2) Red   (3) Blue     (4) White
+    (1) Green <default>   (2) Red   (3) Blue  (4) White
     (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
 """)
 
     op = input(">>> ")
-    while op not in colors:
-        op = input(">>> ")
-
-    color = colors[op]
+    if op in colors:
+        color = colors[op]
+    else:
+        color = colors['1']
     
     if pkg == 'unimatrix':
         print("""
 Unimatrix background color?
     (1) Green   (2) Red   (3) Blue     (4) White
-    (5) Yellow  (6) Cyan  (7) Magenta  (8) Black
+    (5) Yellow  (6) Cyan  (7) Magenta  (8) Black <default>
 """)    
         op = input(">>> ")
-        while op not in colors:
-            op = input(">>> ")
+        if op in colors:
+            bg_color = colors[op]
+        else:
+            bg_color = colors['8']
 
-        bg_color = colors[op]
         matrix = f"unimatrix -ai -c {color} -g {bg_color} -s 90 -l knnssaAg"
         
     elif pkg == 'cmatrix':
@@ -165,7 +166,6 @@ def kitty_conf_gen():
     kittyconf = """font_family      jetbrains mono nerd font
 font_size        15
 confirm_os_window_close 0
-#background_opacity 0.8
 """
     return kittyconf
 
@@ -227,7 +227,7 @@ Make sure you have already installed:
     * cmatrix by abishekvashok OR unimatrix by will8211 (If you have both, the script will prioritize unimatrix)""")
 
 i = input("Proceed? (Y/n) ")
-if i not in ('Yy'):
+if i == 'n':
     exit()
 
 #Get the loged user, the right path for swaylock and checking if the packges are installed 
@@ -279,27 +279,44 @@ print('OK')
 # To not add every time the script is runned, first, the line atribute is remove 
 #   and then we add the attribute if the user wants
 path = f'/home/{USER}/.config/hypr/hyprland.conf'
-
 hyprconf_file = open(path)
 for i, l in enumerate(hyprconf_file.readlines()):
     if 'fullscreen_opacity' in l:
         del_line = i+1
         run(f"sed -i '{del_line}d' {path}", shell=True) #Removed
 
-print("Add background transparency? (It will affect other programs when fullscren)")
-i = input(" (Y/n) >>>")
-if i in ('Yy'):
-    print('How much on a scale 9..1 (1 is almost transparent)')
+# Similar with opacity
+kittyconf_path = f'/home/{USER}/.config/swaylock/kittyconf.conf'
+kittyconf_file = open(kittyconf_path)
+for i, l in enumerate(kittyconf_file.readlines()):
+    if 'background_opacity' in l:
+        del_line = i+1
+        run(f"sed -i '{del_line}d' {path}", shell=True) #Removed
 
+print("Should background effects be added?")
+i = input(" (y/N) >>> ")
+if i == "Y" or i == "y":
+    print("""
+1-> Transparency (It will affect other programs when fullscren)
+2-> Opacity (default)
+""")
+    i = input(">>> ")
+
+    print('How much on a scale 9..1 (5 default & 1 is almost transparent)')
     op = input(">>> ")
-    while int(op) not in range(1, 10):
-        op = input(">>> ")    
+    if op not in ('1', '2', '3', '4', '5', '6', '7', '8', '9'):
+        op = '5'
 
-    hyprconf_file = open(path)
-    for i, l in enumerate(hyprconf_file.readlines()):
-        if 'decoration' in l:
-            add_line = i + 2
+    if i == "1":
+        hyprconf_file = open(path)
+        for i, l in enumerate(hyprconf_file.readlines()):
+            if 'decoration' in l:
+                add_line = i + 2
+        run(f"sed -i '{add_line}i fullscreen_opacity = 0.{op}' {path}", shell=True)  # ADD
 
-    run(f"sed -i '{add_line}i fullscreen_opacity = 0.{op}' {path}", shell=True)#ADD
+    else:
+        run(f"sed -i '1i background_opacity 0.{op}' {kittyconf_path}", shell=True)  # ADD
 
-print('Done!')
+    print('Done!')
+
+print('Finished!')
