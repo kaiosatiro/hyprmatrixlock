@@ -313,6 +313,7 @@ if i == "Y" or i == "y":
             if 'decoration' in l:
                 add_line = i + 2
                 run(f"sed -i '{add_line}i fullscreen_opacity = 0.{op}' {path}", shell=True)  # ADD
+                break
 
     else:
         run(f"sed -i '1i background_opacity 0.{op}' {kittyconf_path}", shell=True)  # ADD
